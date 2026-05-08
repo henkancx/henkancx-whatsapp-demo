@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HenkanCX Agent · Demo WhatsApp Business</title>
+<meta name="description" content="Demo en vivo del agente conversacional de HenkanCX para WhatsApp Business. IA generativa, autogestión completa y creación de órdenes de servicio sin fricción.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    /* Marca HenkanCX */
+    --magenta: #CB6CE6;
+    --magenta-bright: #E040FB;
+    --purple: #833AE0;
+    --navy: #0D1B2A;
+    --slate: #4A4E69;
+    --cloud: #F5F6F8;
+
+    /* WhatsApp */
+    --wa-green: #25D366;
+    --wa-green-dark: #128C7E;
+    --wa-header: #075E54;
+    --wa-bubble-out: #DCF8C6;
+    --wa-bubble-in: #FFFFFF;
+    --wa-bg: #ECE5DD;
+    --wa-text: #303030;
+    --wa-meta: #667781;
+    --wa-verified: #34B7F1;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(203, 108, 230, 0.18), transparent 45%),
+      radial-gradient(circle at 85% 80%, rgba(131, 58, 224, 0.22), transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(13, 27, 42, 1), rgba(13, 27, 42, 1));
+    background-color: var(--navy);
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.4 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.06;
+    z-index: 1;
+    mix-blend-mode: overlay;
+  }
+
+  /* Decorative grid */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 56px 56px;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+  }
+
+  .stage {
+    position: relative;
+    z-index: 2;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    min-height: 100vh;
+  }
+
+  /* HEADER LOGO */
+  .top-bar {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .brand img {
+    height: 38px;
+    width: auto;
+    filter: brightness(0) invert(1);
+  }
+
+  .brand-divider {
+    width: 1px;
+    height: 28px;
+    background: rgba(255,255,255,0.2);
+  }
+
+  .brand-tag {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.02em;
+  }
+
+  .demo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: rgba(203, 108, 230, 0.15);
+    border: 1px solid rgba(203, 108, 230, 0.4);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--magenta);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .demo-badge .dot {
+    width: 7px;
+    height: 7px;
+    background: var(--magenta);
+    border-radius: 50%;
+    animation: pulse 1.6s ease-in-out infinite;
+    box-shadow: 0 0 10px var(--magenta);
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; transform: scale(0.85); }
+    50% { opacity: 1; transform: scale(1.15); }
+  }
+
+  /* COPY SIDE */
+  .copy {
+    position: relative;
+  }
+
+  .eyebrow {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--magenta);
+    margin-bottom: 20px;
+    display: inline-block;
+  }
+
+  h1 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: clamp(42px, 5.4vw, 68px);
+    font-weight: 800;
+    line-height: 0.98;
+    letter-spacing: -0.025em;
+    margin-bottom: 24px;
+  }
+
+  h1 .accent {
+    background: linear-gradient(120deg, var(--magenta) 0%, var(--purple) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-style: italic;
+  }
+
+  .lede {
+    font-size: 18px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.78);
+    max-width: 520px;
+    margin-bottom: 36px;
+  }
+
+  .features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+
+  .feat {
+    padding: 16px 18px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+
+  .feat:hover {
+    background: rgba(203, 108, 230, 0.08);
+    border-color: rgba(203, 108, 230, 0.3);
+    transform: translateY(-2px);
+  }
+
+  .feat-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--magenta), var(--purple));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+
+  .feat-title {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .feat-desc {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.4;
+  }
+
+  .controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 22px;
+    border: none;
+    border-radius: 100px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-primary {
+    background: linear-gradient(120deg, var(--magenta), var(--purple));
+    color: white;
+    box-shadow: 0 8px 24px rgba(131, 58, 224, 0.4);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(131, 58, 224, 0.55);
+  }
+
+  .btn-ghost {
+    background: rgba(255,255,255,0.06);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(255,255,255,0.3);
+  }
+
+  /* ============== PHONE MOCKUP ============== */
+  .phone-wrap {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1500px;
+  }
+
+  /* Glow detrás del phone */
+  .phone-wrap::before {
+    content: "";
+    position: absolute;
+    width: 110%;
+    height: 90%;
+    background: radial-gradient(ellipse at center, rgba(37, 211, 102, 0.25) 0%, rgba(203, 108, 230, 0.15) 35%, transparent 70%);
+    filter: blur(60px);
+    z-index: -1;
+    animation: glowShift 6s ease-in-out infinite alternate;
+  }
+
+  @keyframes glowShift {
+    0% { transform: translate(-15px, -10px) scale(0.95); }
+    100% { transform: translate(15px, 10px) scale(1.05); }
+  }
+
+  .phone {
+    width: 380px;
+    height: 770px;
+    background: linear-gradient(135deg, #1a1a1c 0%, #2a2a2e 50%, #1a1a1c 100%);
+    border-radius: 56px;
+    padding: 14px;
+    position: relative;
+    box-shadow:
+      inset 0 0 0 2px #3a3a3e,
+      inset 0 0 0 4px #1a1a1c,
+      0 0 0 1px rgba(255,255,255,0.05),
+      0 30px 80px rgba(0,0,0,0.6),
+      0 50px 120px rgba(131, 58, 224, 0.25);
+    transform: rotateY(-4deg) rotateX(2deg);
+    transition: transform 0.8s ease;
+  }
+
+  .phone:hover {
+    transform: rotateY(0deg) rotateX(0deg);
+  }
+
+  /* Side buttons */
+  .phone::before {
+    content: "";
+    position: absolute;
+    left: -3px;
+    top: 180px;
+    width: 3px;
+    height: 90px;
+    background: #1a1a1c;
+    border-radius: 2px 0 0 2px;
+    box-shadow: 0 110px 0 #1a1a1c, 0 -130px 0 #1a1a1c;
+    height: 90px;
+  }
+
+  .phone::after {
+    content: "";
+    position: absolute;
+    right: -3px;
+    top: 200px;
+    width: 3px;
+    height: 130px;
+    background: #1a1a1c;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .screen {
+    width: 100%;
+    height: 100%;
+    background: #ECE5DD;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='%23d4cdbc' fill-opacity='0.35'%3E%3Cpath d='M12 18c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6zm60 0c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6zm-30 30c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6zm60 30c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6zM18 90c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6z'/%3E%3C/g%3E%3C/svg%3E");
+    border-radius: 44px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Dynamic Island */
+  .island {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 110px;
+    height: 32px;
+    background: #000;
+    border-radius: 20px;
+    z-index: 100;
+  }
+
+  /* Status bar */
+  .status-bar {
+    height: 54px;
+    background: var(--wa-header);
+    background: linear-gradient(180deg, #075E54 0%, #075E54 100%);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 0 28px 8px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .status-icons {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .battery {
+    width: 24px;
+    height: 12px;
+    border: 1.5px solid white;
+    border-radius: 3px;
+    position: relative;
+    padding: 1px;
+  }
+
+  .battery::after {
+    content: "";
+    position: absolute;
+    right: -4px;
+    top: 3px;
+    width: 2px;
+    height: 4px;
+    background: white;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .battery-fill {
+    width: 78%;
+    height: 100%;
+    background: white;
+    border-radius: 1px;
+  }
+
+  /* WhatsApp Header */
+  .wa-header {
+    background: var(--wa-header);
+    padding: 6px 12px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+  }
+
+  .wa-back {
+    color: white;
+    font-size: 22px;
+    line-height: 1;
+    padding: 4px;
+  }
+
+  .wa-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--magenta), var(--purple));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 17px;
+    color: white;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
+  }
+
+  .wa-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .wa-name {
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    line-height: 1.2;
+  }
+
+  .wa-verified {
+    width: 16px;
+    height: 16px;
+    background: var(--wa-verified);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .wa-verified svg {
+    width: 10px;
+    height: 10px;
+    fill: white;
+  }
+
+  .wa-status {
+    font-size: 12px;
+    color: rgba(255,255,255,0.85);
+    margin-top: 2px;
+  }
+
+  .wa-actions {
+    display: flex;
+    gap: 18px;
+    color: white;
+    font-size: 18px;
+  }
+
+  /* Business banner */
+  .biz-banner {
+    background: rgba(7, 94, 84, 0.08);
+    padding: 8px 16px;
+    font-size: 11.5px;
+    color: var(--wa-header);
+    text-align: center;
+    border-bottom: 1px solid rgba(7, 94, 84, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .biz-banner svg {
+    width: 14px;
+    height: 14px;
+    fill: var(--wa-header);
+  }
+
+  /* Chat area */
+  .chat {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 12px 8px 70px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0,0,0,0.2) transparent;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .chat::-webkit-scrollbar { width: 4px; }
+  .chat::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
+
+  /* Date divider */
+  .date-divider {
+    align-self: center;
+    background: rgba(225, 245, 254, 0.92);
+    color: var(--wa-meta);
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 7px;
+    margin: 6px 0;
+    box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+    font-weight: 500;
+  }
+
+  /* Encryption notice */
+  .enc-notice {
+    align-self: center;
+    background: #FDF6CB;
+    color: #54656F;
+    font-size: 11.5px;
+    padding: 6px 14px;
+    border-radius: 7px;
+    margin: 6px 12px;
+    text-align: center;
+    line-height: 1.4;
+    box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+  }
+
+  /* Bubbles */
+  .bubble {
+    max-width: 78%;
+    padding: 6px 9px 8px;
+    border-radius: 8px;
+    box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+    position: relative;
+    word-wrap: break-word;
+    font-size: 14.5px;
+    line-height: 1.36;
+    color: var(--wa-text);
+    animation: bubbleIn 0.32s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes bubbleIn {
+    0% { opacity: 0; transform: translateY(8px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .bubble.in {
+    align-self: flex-start;
+    background: var(--wa-bubble-in);
+    border-top-left-radius: 0;
+    margin-left: 8px;
+  }
+
+  .bubble.in::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -8px;
+    width: 8px;
+    height: 13px;
+    background: var(--wa-bubble-in);
+    clip-path: polygon(100% 0, 0 0, 100% 100%);
+  }
+
+  .bubble.out {
+    align-self: flex-end;
+    background: var(--wa-bubble-out);
+    border-top-right-radius: 0;
+    margin-right: 8px;
+  }
+
+  .bubble.out::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -8px;
+    width: 8px;
+    height: 13px;
+    background: var(--wa-bubble-out);
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+  }
+
+  .bubble .meta {
+    font-size: 10.5px;
+    color: var(--wa-meta);
+    float: right;
+    margin: 4px 0 -4px 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    line-height: 1;
+  }
+
+  .bubble .check {
+    color: var(--wa-verified);
+    font-size: 14px;
+    line-height: 1;
+    letter-spacing: -3px;
+    margin-left: 1px;
+  }
+
+  .bubble.system {
+    align-self: stretch;
+    background: linear-gradient(135deg, rgba(203, 108, 230, 0.12), rgba(131, 58, 224, 0.12));
+    border: 1px solid rgba(131, 58, 224, 0.25);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12.5px;
+    color: var(--purple);
+    margin: 4px 12px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    box-shadow: none;
+  }
+
+  .bubble.system::before { display: none; }
+
+  .bubble.system .sys-icon {
+    flex-shrink: 0;
+    font-size: 14px;
+  }
+
+  .bubble strong { font-weight: 600; }
+
+  .bubble .quick-replies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .qr-btn {
+    background: white;
+    border: 1px solid var(--wa-verified);
+    color: var(--wa-verified);
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .qr-btn:hover { background: var(--wa-verified); color: white; }
+
+  /* Receipt card */
+  .receipt {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 6px;
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+
+  .receipt-header {
+    background: linear-gradient(120deg, var(--wa-green-dark), var(--wa-header));
+    color: white;
+    padding: 10px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .receipt-body {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .receipt-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    gap: 12px;
+  }
+
+  .receipt-row:not(:last-child) {
+    border-bottom: 1px dashed rgba(0,0,0,0.08);
+  }
+
+  .receipt-label { color: var(--wa-meta); font-size: 12px; }
+  .receipt-val { font-weight: 600; text-align: right; }
+
+  /* Typing indicator */
+  .typing {
+    align-self: flex-start;
+    background: var(--wa-bubble-in);
+    border-radius: 16px;
+    border-top-left-radius: 0;
+    padding: 10px 14px;
+    margin-left: 8px;
+    box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+    display: flex;
+    gap: 4px;
+    animation: bubbleIn 0.3s ease;
+  }
+
+  .typing span {
+    width: 7px;
+    height: 7px;
+    background: var(--wa-meta);
+    border-radius: 50%;
+    animation: typingBounce 1.4s infinite ease-in-out;
+  }
+
+  .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  /* Input bar */
+  .input-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #f0f0f0;
+    padding: 8px 8px 14px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .input-field {
+    flex: 1;
+    background: white;
+    border-radius: 24px;
+    padding: 9px 14px;
+    font-size: 14px;
+    color: var(--wa-meta);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 38px;
+  }
+
+  .input-icon {
+    color: var(--wa-meta);
+    font-size: 18px;
+  }
+
+  .send-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--wa-header);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .send-btn svg { width: 20px; height: 20px; fill: white; }
+
+  /* Footer */
+  .footer {
+    grid-column: 1 / -1;
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+  }
+
+  .footer a {
+    color: var(--magenta);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .footer a:hover { text-decoration: underline; }
+
+  .progress-bar {
+    grid-column: 1 / -1;
+    height: 3px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 20px;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--magenta), var(--purple));
+    width: 0%;
+    transition: width 0.4s ease;
+    border-radius: 2px;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .stage {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding: 24px 20px 40px;
+    }
+    .copy { text-align: center; order: 1; }
+    .phone-wrap { order: 2; }
+    .lede { margin-left: auto; margin-right: auto; }
+    .features { max-width: 600px; margin-left: auto; margin-right: auto; }
+    .controls { justify-content: center; }
+  }
+
+  @media (max-width: 480px) {
+    .phone {
+      width: 340px;
+      height: 690px;
+    }
+    .features { grid-template-columns: 1fr; }
+    h1 { font-size: 38px; }
+    .top-bar { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+
+  <!-- Top bar with logo -->
+  <div class="top-bar">
+    <div class="brand">
+      <img src="https://www.henkancx.com/logo-henkancx.png" alt="HenkanCX" />
+      <div class="brand-divider"></div>
+      <span class="brand-tag">Conversational AI for WhatsApp Business</span>
+    </div>
+    <div class="demo-badge">
+      <span class="dot"></span>
+      <span>LIVE DEMO</span>
+    </div>
+  </div>
+
+  <!-- Copy side -->
+  <div class="copy">
+    <span class="eyebrow">CASO DE USO · SOPORTE TÉCNICO</span>
+    <h1>Soporte sin <span class="accent">fricción</span>, 24/7.</h1>
+    <p class="lede">
+      Henky es el agente conversacional de HenkanCX que diagnostica, consulta datos en tu CRM y crea órdenes de servicio en minutos. NLP + IA generativa orquestados sobre WhatsApp Business API oficial.
+    </p>
+
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon">🧠</div>
+        <div class="feat-title">NLP + Gen AI</div>
+        <div class="feat-desc">Comprende lenguaje natural, no menús rígidos.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🔍</div>
+        <div class="feat-title">Consulta de datos</div>
+        <div class="feat-desc">CRM, ERP y core en tiempo real.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🛠️</div>
+        <div class="feat-title">Troubleshooting guiado</div>
+        <div class="feat-desc">Reduce visitas innecesarias hasta 35%.</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📋</div>
+        <div class="feat-title">Autogestión total</div>
+        <div class="feat-desc">Orden de servicio creada y agendada sola.</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn btn-primary" id="replayBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Reproducir demo
+      </button>
+      <button class="btn btn-ghost" id="speedBtn">
+        ⚡ Velocidad: <span id="speedLabel">1×</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Phone -->
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="screen">
+        <div class="island"></div>
+        <div class="status-bar">
+          <span>9:41</span>
+          <div class="status-icons">
+            <span style="font-size:12px;">📶</span>
+            <span style="font-size:12px;">📡</span>
+            <div class="battery"><div class="battery-fill"></div></div>
+          </div>
+        </div>
+
+        <div class="wa-header">
+          <span class="wa-back">‹</span>
+          <div class="wa-avatar">H</div>
+          <div class="wa-info">
+            <div class="wa-name">
+              HenkanCX Agent
+              <span class="wa-verified" title="Cuenta verificada">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              </span>
+            </div>
+            <div class="wa-status" id="waStatus">en línea</div>
+          </div>
+          <div class="wa-actions">
+            <span>📹</span>
+            <span>📞</span>
+            <span>⋮</span>
+          </div>
+        </div>
+
+        <div class="biz-banner">
+          <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+          Cuenta de empresa verificada por WhatsApp · Cifrado de extremo a extremo
+        </div>
+
+        <div class="chat" id="chat">
+          <div class="date-divider">HOY</div>
+        </div>
+
+        <div class="input-bar">
+          <div class="input-field">
+            <span class="input-icon">😊</span>
+            <span style="flex:1;">Mensaje</span>
+            <span class="input-icon">📎</span>
+            <span class="input-icon">📷</span>
+          </div>
+          <div class="send-btn">
+            <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress"></div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div>
+      © 2026 HenkanCX · Transformamos la experiencia del cliente desde el día 1.
+    </div>
+    <div>
+      <a href="https://henkancx.com" target="_blank" rel="noopener">henkancx.com</a>
+      &nbsp;·&nbsp;
+      <a href="mailto:info@henkancx.com">info@henkancx.com</a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ============ CONVERSATION SCRIPT ============
+  // Cada paso: { type, content, delay (ms after previous), typingMs (optional) }
+  const conversation = [
+    { type: 'enc', content: 'Los mensajes y llamadas están cifrados de extremo a extremo. Solo las personas en este chat pueden leerlos.', delay: 400 },
+
+    { type: 'out', content: 'Hola 👋', meta: '9:42 AM', delay: 800 },
+    { type: 'out', content: 'Mi refrigeradora dejó de enfriar desde anoche 😩', meta: '9:42 AM', delay: 700 },
+
+    { type: 'typing', delay: 600, duration: 1400 },
+    { type: 'in', content: '¡Hola, María! Soy <strong>Henky</strong>, tu asistente virtual de HenkanCX 🤖<br><br>Lamento escuchar lo de tu refri. Voy a ayudarte a resolverlo lo más rápido posible — sin que tengas que esperar en línea.', meta: '9:42 AM', delay: 200 },
+
+    { type: 'typing', delay: 600, duration: 1100 },
+    { type: 'in', content: 'Para empezar, ¿me confirmas tu cédula o número de contrato?', meta: '9:42 AM', delay: 200 },
+
+    { type: 'out', content: '8-756-2341', meta: '9:43 AM', delay: 1200 },
+
+    { type: 'typing', delay: 600, duration: 1800 },
+    { type: 'system', icon: '🔍', content: 'Henky consultó <strong>CRM + ERP</strong> · 1.2s' },
+    { type: 'in', content: '¡Te encontré, María! ✅<br><br>👤 <strong>María González Pérez</strong><br>📍 Vía España, Edif. Torre Mar #1402<br>📦 Refrigeradora Samsung RT35K (S/N: RF8829)<br>🛡️ Garantía vigente hasta <strong>sept. 2026</strong>', meta: '9:43 AM', delay: 200 },
+
+    { type: 'typing', delay: 700, duration: 1200 },
+    { type: 'in', content: 'Antes de mandar un técnico, dame 30 segundos para hacerte un mini-diagnóstico. Muchas veces resolvemos sin necesidad de visita 😉<br><br>¿Empezamos?', meta: '9:43 AM', delay: 200 },
+
+    { type: 'out', content: 'Dale, vamos', meta: '9:43 AM', delay: 1300 },
+
+    { type: 'typing', delay: 600, duration: 1100 },
+    { type: 'in', content: '<strong>Pregunta 1 de 3:</strong> ¿La luz interior se enciende cuando abres la puerta? 💡', meta: '9:43 AM', delay: 200 },
+
+    { type: 'out', content: 'Sí, la luz prende normal', meta: '9:44 AM', delay: 1500 },
+
+    { type: 'typing', delay: 500, duration: 1000 },
+    { type: 'in', content: '✅ Bien — energía eléctrica confirmada.<br><br><strong>Pregunta 2 de 3:</strong> ¿Escuchas el motor (compresor) zumbando, o está totalmente en silencio?', meta: '9:44 AM', delay: 200 },
+
+    { type: 'out', content: 'Está en silencio total. Antes hacía un zumbido bajito y ya no.', meta: '9:44 AM', delay: 1700 },
+
+    { type: 'typing', delay: 500, duration: 1300 },
+    { type: 'in', content: 'Entendido. Una última 🙌<br><br><strong>Pregunta 3 de 3:</strong> ¿El congelador (la parte de arriba) tiene escarcha/hielo o también está sin enfriar?', meta: '9:44 AM', delay: 200 },
+
+    { type: 'out', content: 'Tampoco enfría. La carne se descongeló 😢', meta: '9:45 AM', delay: 1500 },
+
+    { type: 'typing', delay: 600, duration: 2000 },
+    { type: 'system', icon: '🧠', content: 'IA generativa analizando síntomas + historial...' },
+    { type: 'in', content: '🚨 <strong>Diagnóstico preliminar</strong><br><br>Síntomas compatibles con falla del <strong>compresor</strong> o el <strong>relevador de arranque</strong>. Esto requiere visita técnica con repuesto.<br><br>La buena noticia: tu garantía cubre 100% el servicio y las piezas ✨', meta: '9:45 AM', delay: 200 },
+
+    { type: 'typing', delay: 700, duration: 1100 },
+    { type: 'in', content: 'Voy a generar tu orden de servicio. ¿Confirmamos la dirección registrada?<br><br>📍 Vía España, Edif. Torre Mar, Apto 1402', meta: '9:45 AM', delay: 200 },
+
+    { type: 'out', content: 'Sí, esa misma', meta: '9:45 AM', delay: 1200 },
+
+    { type: 'typing', delay: 500, duration: 900 },
+    { type: 'in', content: '¿Qué horario te queda mejor mañana viernes?', meta: '9:45 AM', delay: 200, quickReplies: ['🌅 8AM – 12PM', '☀️ 12PM – 4PM', '🌆 4PM – 7PM'] },
+
+    { type: 'out', content: '🌅 8AM – 12PM', meta: '9:46 AM', delay: 1800 },
+
+    { type: 'typing', delay: 700, duration: 2200 },
+    { type: 'system', icon: '⚙️', content: 'Asignando técnico con repuestos + creando orden en ERP...' },
+    { type: 'in', content: '✨ <strong>¡Listo, María! Tu orden está confirmada:</strong>', meta: '9:46 AM', delay: 200, receipt: {
+      header: ['📋 Orden de Servicio', '#SR-2026-04872'],
+      rows: [
+        ['Técnico asignado', 'Carlos Méndez ⭐ 4.9'],
+        ['Fecha', 'Vie. 09 may, 2026'],
+        ['Ventana', '8:00 AM – 12:00 PM'],
+        ['Repuestos', 'Relevador + compresor'],
+        ['Tiempo estimado', '45 – 60 min'],
+        ['Costo cliente', '$0.00 (garantía) ✓']
+      ]
+    } },
+
+    { type: 'typing', delay: 700, duration: 1100 },
+    { type: 'in', content: 'Recibirás un SMS 30 minutos antes de que Carlos llegue 🚐<br><br>Y si quieres, puedes <strong>seguir su ubicación en vivo</strong> el día de la visita.<br><br>¿Algo más en lo que te pueda ayudar?', meta: '9:46 AM', delay: 200 },
+
+    { type: 'out', content: 'Nada más, ¡mil gracias Henky! 🙏', meta: '9:47 AM', delay: 1600 },
+
+    { type: 'typing', delay: 500, duration: 1000 },
+    { type: 'in', content: '¡Con muchísimo gusto, María! 💜<br><br>Si necesitas algo más, escríbeme. Estoy disponible 24/7.<br><br>Que tengas un excelente día ☀️', meta: '9:47 AM', delay: 200 }
+  ];
+
+  // ============ PLAYER ============
+  const chat = document.getElementById('chat');
+  const replayBtn = document.getElementById('replayBtn');
+  const speedBtn = document.getElementById('speedBtn');
+  const speedLabel = document.getElementById('speedLabel');
+  const waStatus = document.getElementById('waStatus');
+  const progress = document.getElementById('progress');
+
+  let speed = 1;
+  let speeds = [1, 1.5, 2, 0.5];
+  let speedIdx = 0;
+  let playing = false;
+  let cancelToken = 0;
+
+  speedBtn.addEventListener('click', () => {
+    speedIdx = (speedIdx + 1) % speeds.length;
+    speed = speeds[speedIdx];
+    speedLabel.textContent = speed + '×';
+  });
+
+  function wait(ms) {
+    return new Promise(r => setTimeout(r, ms / speed));
+  }
+
+  function scrollChat() {
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function clearChat() {
+    chat.innerHTML = '<div class="date-divider">HOY</div>';
+  }
+
+  function appendBubble(step) {
+    const b = document.createElement('div');
+
+    if (step.type === 'enc') {
+      b.className = 'enc-notice';
+      b.innerHTML = '🔒 ' + step.content;
+    } else if (step.type === 'system') {
+      b.className = 'bubble system';
+      b.innerHTML = `<span class="sys-icon">${step.icon}</span><span>${step.content}</span>`;
+    } else {
+      b.className = 'bubble ' + step.type;
+      let html = step.content;
+      if (step.meta) {
+        const checks = step.type === 'out' ? '<span class="check">✓✓</span>' : '';
+        html += `<span class="meta">${step.meta}${checks}</span>`;
+      }
+      if (step.quickReplies) {
+        html += '<div class="quick-replies">' +
+          step.quickReplies.map(q => `<button class="qr-btn">${q}</button>`).join('') +
+          '</div>';
+      }
+      if (step.receipt) {
+        html += `
+          <div class="receipt">
+            <div class="receipt-header">
+              <span>${step.receipt.header[0]}</span>
+              <span>${step.receipt.header[1]}</span>
+            </div>
+            <div class="receipt-body">
+              ${step.receipt.rows.map(r => `
+                <div class="receipt-row">
+                  <span class="receipt-label">${r[0]}</span>
+                  <span class="receipt-val">${r[1]}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+      b.innerHTML = html;
+    }
+    chat.appendChild(b);
+    scrollChat();
+    return b;
+  }
+
+  function appendTyping() {
+    const t = document.createElement('div');
+    t.className = 'typing';
+    t.innerHTML = '<span></span><span></span><span></span>';
+    chat.appendChild(t);
+    scrollChat();
+    return t;
+  }
+
+  async function play() {
+    if (playing) return;
+    playing = true;
+    const myToken = ++cancelToken;
+    clearChat();
+    progress.style.width = '0%';
+    waStatus.textContent = 'en línea';
+
+    for (let i = 0; i < conversation.length; i++) {
+      if (myToken !== cancelToken) return;
+      const step = conversation[i];
+      await wait(step.delay || 500);
+      if (myToken !== cancelToken) return;
+
+      if (step.type === 'typing') {
+        waStatus.textContent = 'escribiendo…';
+        const t = appendTyping();
+        await wait(step.duration || 1200);
+        if (myToken !== cancelToken) return;
+        t.remove();
+        waStatus.textContent = 'en línea';
+      } else {
+        appendBubble(step);
+      }
+      progress.style.width = (((i + 1) / conversation.length) * 100) + '%';
+    }
+    playing = false;
+  }
+
+  replayBtn.addEventListener('click', play);
+
+  // Auto-start
+  window.addEventListener('load', () => {
+    setTimeout(play, 500);
+  });
+</script>
+
+</body>
+</html>

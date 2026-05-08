@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://henkancx.github.io/henkancx-whatsapp-demo/sitemap.xml
