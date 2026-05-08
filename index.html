@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HenkanCX Agent · Demo WhatsApp Business</title>
-<meta name="description" content="Demo en vivo del agente conversacional de HenkanCX para WhatsApp Business. IA generativa, autogestión completa y creación de órdenes de servicio sin fricción.">
+<meta name="description" content="Demo en vivo del agente conversacional de HenkanCX para WhatsApp Business. NLP, transcripción de voz con IA, autogestión y creación de órdenes de servicio sin fricción.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,6 @@
 
 <style>
   :root {
-    /* Marca HenkanCX */
     --magenta: #CB6CE6;
     --magenta-bright: #E040FB;
     --purple: #833AE0;
@@ -20,7 +19,6 @@
     --slate: #4A4E69;
     --cloud: #F5F6F8;
 
-    /* WhatsApp */
     --wa-green: #25D366;
     --wa-green-dark: #128C7E;
     --wa-header: #075E54;
@@ -30,10 +28,10 @@
     --wa-text: #303030;
     --wa-meta: #667781;
     --wa-verified: #34B7F1;
+    --wa-link: #027EB5;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   html, body { height: 100%; }
 
   body {
@@ -41,7 +39,7 @@
     background:
       radial-gradient(circle at 15% 20%, rgba(203, 108, 230, 0.18), transparent 45%),
       radial-gradient(circle at 85% 80%, rgba(131, 58, 224, 0.22), transparent 50%),
-      radial-gradient(circle at 50% 50%, rgba(13, 27, 42, 1), rgba(13, 27, 42, 1));
+      radial-gradient(circle at 50% 50%, var(--navy), var(--navy));
     background-color: var(--navy);
     color: #fff;
     min-height: 100vh;
@@ -49,7 +47,6 @@
     position: relative;
   }
 
-  /* Grain overlay */
   body::before {
     content: "";
     position: fixed;
@@ -61,7 +58,6 @@
     mix-blend-mode: overlay;
   }
 
-  /* Decorative grid */
   body::after {
     content: "";
     position: fixed;
@@ -89,7 +85,6 @@
     min-height: 100vh;
   }
 
-  /* HEADER LOGO */
   .top-bar {
     grid-column: 1 / -1;
     display: flex;
@@ -100,24 +95,9 @@
     gap: 16px;
   }
 
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .brand img {
-    height: 38px;
-    width: auto;
-    filter: brightness(0) invert(1);
-  }
-
-  .brand-divider {
-    width: 1px;
-    height: 28px;
-    background: rgba(255,255,255,0.2);
-  }
-
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand img { height: 38px; width: auto; filter: brightness(0) invert(1); }
+  .brand-divider { width: 1px; height: 28px; background: rgba(255,255,255,0.2); }
   .brand-tag {
     font-family: 'Bricolage Grotesque', sans-serif;
     font-size: 13px;
@@ -142,10 +122,8 @@
   }
 
   .demo-badge .dot {
-    width: 7px;
-    height: 7px;
-    background: var(--magenta);
-    border-radius: 50%;
+    width: 7px; height: 7px;
+    background: var(--magenta); border-radius: 50%;
     animation: pulse 1.6s ease-in-out infinite;
     box-shadow: 0 0 10px var(--magenta);
   }
@@ -155,10 +133,7 @@
     50% { opacity: 1; transform: scale(1.15); }
   }
 
-  /* COPY SIDE */
-  .copy {
-    position: relative;
-  }
+  .copy { position: relative; }
 
   .eyebrow {
     font-family: 'Bricolage Grotesque', sans-serif;
@@ -219,46 +194,29 @@
   }
 
   .feat-icon {
-    width: 32px;
-    height: 32px;
+    width: 32px; height: 32px;
     border-radius: 8px;
     background: linear-gradient(135deg, var(--magenta), var(--purple));
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     margin-bottom: 10px;
     font-size: 16px;
   }
 
   .feat-title {
     font-family: 'Bricolage Grotesque', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 14px; font-weight: 700;
     margin-bottom: 4px;
   }
 
-  .feat-desc {
-    font-size: 12.5px;
-    color: rgba(255,255,255,0.6);
-    line-height: 1.4;
-  }
+  .feat-desc { font-size: 12.5px; color: rgba(255,255,255,0.6); line-height: 1.4; }
 
-  .controls {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
+  .controls { display: flex; gap: 12px; flex-wrap: wrap; }
 
   .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 14px 22px;
-    border: none;
-    border-radius: 100px;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 22px; border: none; border-radius: 100px;
     font-family: 'Inter', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 14px; font-weight: 600;
     cursor: pointer;
     transition: all 0.25s ease;
     letter-spacing: 0.01em;
@@ -295,12 +253,10 @@
     perspective: 1500px;
   }
 
-  /* Glow detrás del phone */
   .phone-wrap::before {
     content: "";
     position: absolute;
-    width: 110%;
-    height: 90%;
+    width: 110%; height: 90%;
     background: radial-gradient(ellipse at center, rgba(37, 211, 102, 0.25) 0%, rgba(203, 108, 230, 0.15) 35%, transparent 70%);
     filter: blur(60px);
     z-index: -1;
@@ -311,6 +267,47 @@
     0% { transform: translate(-15px, -10px) scale(0.95); }
     100% { transform: translate(15px, 10px) scale(1.05); }
   }
+
+  /* External agent status — clearly demo UI overlay */
+  .agent-status {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 16px 9px 13px;
+    background: linear-gradient(135deg, rgba(203, 108, 230, 0.95), rgba(131, 58, 224, 0.95));
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+    letter-spacing: 0.02em;
+    box-shadow: 0 8px 24px rgba(131, 58, 224, 0.5), 0 0 0 1px rgba(255,255,255,0.1) inset;
+    z-index: 50;
+    backdrop-filter: blur(20px);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+
+  .agent-status.on {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .agent-status .as-spinner {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   .phone {
     width: 380px;
@@ -329,39 +326,11 @@
     transition: transform 0.8s ease;
   }
 
-  .phone:hover {
-    transform: rotateY(0deg) rotateX(0deg);
-  }
-
-  /* Side buttons */
-  .phone::before {
-    content: "";
-    position: absolute;
-    left: -3px;
-    top: 180px;
-    width: 3px;
-    height: 90px;
-    background: #1a1a1c;
-    border-radius: 2px 0 0 2px;
-    box-shadow: 0 110px 0 #1a1a1c, 0 -130px 0 #1a1a1c;
-    height: 90px;
-  }
-
-  .phone::after {
-    content: "";
-    position: absolute;
-    right: -3px;
-    top: 200px;
-    width: 3px;
-    height: 130px;
-    background: #1a1a1c;
-    border-radius: 0 2px 2px 0;
-  }
+  .phone:hover { transform: rotateY(0deg) rotateX(0deg); }
 
   .screen {
-    width: 100%;
-    height: 100%;
-    background: #ECE5DD;
+    width: 100%; height: 100%;
+    background: var(--wa-bg);
     background-image:
       url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='%23d4cdbc' fill-opacity='0.35'%3E%3Cpath d='M12 18c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6zm60 0c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6zm-30 30c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6zm60 30c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6zM18 90c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6-6-2.7-6-6z'/%3E%3C/g%3E%3C/svg%3E");
     border-radius: 44px;
@@ -371,68 +340,44 @@
     flex-direction: column;
   }
 
-  /* Dynamic Island */
   .island {
     position: absolute;
-    top: 12px;
-    left: 50%;
+    top: 12px; left: 50%;
     transform: translateX(-50%);
-    width: 110px;
-    height: 32px;
+    width: 110px; height: 32px;
     background: #000;
     border-radius: 20px;
     z-index: 100;
   }
 
-  /* Status bar */
   .status-bar {
     height: 54px;
     background: var(--wa-header);
-    background: linear-gradient(180deg, #075E54 0%, #075E54 100%);
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     padding: 0 28px 8px;
     color: white;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 14px; font-weight: 600;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
-  .status-icons {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-  }
+  .status-icons { display: flex; gap: 5px; align-items: center; }
 
   .battery {
-    width: 24px;
-    height: 12px;
-    border: 1.5px solid white;
-    border-radius: 3px;
-    position: relative;
-    padding: 1px;
+    width: 24px; height: 12px;
+    border: 1.5px solid white; border-radius: 3px;
+    position: relative; padding: 1px;
   }
-
   .battery::after {
-    content: "";
-    position: absolute;
-    right: -4px;
-    top: 3px;
-    width: 2px;
-    height: 4px;
+    content: ""; position: absolute;
+    right: -4px; top: 3px;
+    width: 2px; height: 4px;
     background: white;
     border-radius: 0 2px 2px 0;
   }
+  .battery-fill { width: 78%; height: 100%; background: white; border-radius: 1px; }
 
-  .battery-fill {
-    width: 78%;
-    height: 100%;
-    background: white;
-    border-radius: 1px;
-  }
-
-  /* WhatsApp Header */
   .wa-header {
     background: var(--wa-header);
     padding: 6px 12px 10px;
@@ -442,16 +387,10 @@
     color: white;
   }
 
-  .wa-back {
-    color: white;
-    font-size: 22px;
-    line-height: 1;
-    padding: 4px;
-  }
+  .wa-back { color: white; font-size: 22px; line-height: 1; padding: 4px; }
 
   .wa-avatar {
-    width: 40px;
-    height: 40px;
+    width: 40px; height: 40px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--magenta), var(--purple));
     display: flex;
@@ -465,23 +404,15 @@
     box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
   }
 
-  .wa-info {
-    flex: 1;
-    min-width: 0;
-  }
-
+  .wa-info { flex: 1; min-width: 0; }
   .wa-name {
-    font-size: 16px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    line-height: 1.2;
+    font-size: 16px; font-weight: 600;
+    display: flex; align-items: center;
+    gap: 5px; line-height: 1.2;
   }
 
   .wa-verified {
-    width: 16px;
-    height: 16px;
+    width: 16px; height: 16px;
     background: var(--wa-verified);
     border-radius: 50%;
     display: inline-flex;
@@ -489,12 +420,7 @@
     justify-content: center;
     flex-shrink: 0;
   }
-
-  .wa-verified svg {
-    width: 10px;
-    height: 10px;
-    fill: white;
-  }
+  .wa-verified svg { width: 10px; height: 10px; fill: white; }
 
   .wa-status {
     font-size: 12px;
@@ -502,14 +428,8 @@
     margin-top: 2px;
   }
 
-  .wa-actions {
-    display: flex;
-    gap: 18px;
-    color: white;
-    font-size: 18px;
-  }
+  .wa-actions { display: flex; gap: 18px; color: white; font-size: 18px; }
 
-  /* Business banner */
   .biz-banner {
     background: rgba(7, 94, 84, 0.08);
     padding: 8px 16px;
@@ -522,14 +442,8 @@
     justify-content: center;
     gap: 6px;
   }
+  .biz-banner svg { width: 14px; height: 14px; fill: var(--wa-header); }
 
-  .biz-banner svg {
-    width: 14px;
-    height: 14px;
-    fill: var(--wa-header);
-  }
-
-  /* Chat area */
   .chat {
     flex: 1;
     overflow-y: auto;
@@ -543,11 +457,9 @@
     scrollbar-color: rgba(0,0,0,0.2) transparent;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
-
   .chat::-webkit-scrollbar { width: 4px; }
   .chat::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 2px; }
 
-  /* Date divider */
   .date-divider {
     align-self: center;
     background: rgba(225, 245, 254, 0.92);
@@ -560,7 +472,6 @@
     font-weight: 500;
   }
 
-  /* Encryption notice */
   .enc-notice {
     align-self: center;
     background: #FDF6CB;
@@ -574,7 +485,7 @@
     box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
   }
 
-  /* Bubbles */
+  /* ===== BUBBLES ===== */
   .bubble {
     max-width: 78%;
     padding: 6px 9px 8px;
@@ -601,14 +512,10 @@
     border-top-left-radius: 0;
     margin-left: 8px;
   }
-
   .bubble.in::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: -8px;
-    width: 8px;
-    height: 13px;
+    content: ""; position: absolute;
+    top: 0; left: -8px;
+    width: 8px; height: 13px;
     background: var(--wa-bubble-in);
     clip-path: polygon(100% 0, 0 0, 100% 100%);
   }
@@ -619,14 +526,10 @@
     border-top-right-radius: 0;
     margin-right: 8px;
   }
-
   .bubble.out::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: -8px;
-    width: 8px;
-    height: 13px;
+    content: ""; position: absolute;
+    top: 0; right: -8px;
+    width: 8px; height: 13px;
     background: var(--wa-bubble-out);
     clip-path: polygon(0 0, 100% 0, 0 100%);
   }
@@ -650,134 +553,293 @@
     margin-left: 1px;
   }
 
-  .bubble.system {
-    align-self: stretch;
-    background: linear-gradient(135deg, rgba(203, 108, 230, 0.12), rgba(131, 58, 224, 0.12));
-    border: 1px solid rgba(131, 58, 224, 0.25);
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: 12.5px;
-    color: var(--purple);
-    margin: 4px 12px;
-    display: flex;
-    gap: 8px;
-    align-items: flex-start;
-    box-shadow: none;
-  }
-
-  .bubble.system::before { display: none; }
-
-  .bubble.system .sys-icon {
-    flex-shrink: 0;
-    font-size: 14px;
-  }
-
   .bubble strong { font-weight: 600; }
+  .bubble em { font-style: italic; }
 
-  .bubble .quick-replies {
+  /* ===== VOICE MESSAGE ===== */
+  .voice {
+    min-width: 240px;
+    padding: 8px 10px 10px !important;
+  }
+
+  .voice-row {
     display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .voice-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .voice-avatar::after {
+    content: "🎤";
+    position: absolute;
+    bottom: -3px;
+    right: -3px;
+    background: white;
+    border-radius: 50%;
+    width: 14px;
+    height: 14px;
+    font-size: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  }
+
+  .voice-play {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--wa-meta);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .voice.played .voice-play { background: var(--wa-header); }
+  .voice-play svg { width: 12px; height: 12px; fill: white; }
+
+  .voice-waveform {
+    flex: 1;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    min-width: 90px;
+  }
+
+  .voice-waveform .bar {
+    flex: 1;
+    background: var(--wa-meta);
+    border-radius: 1px;
+    transition: background 0.15s ease;
+    min-height: 3px;
+  }
+
+  .voice.playing .bar { background: var(--wa-header); }
+
+  .voice-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+    flex-shrink: 0;
+    font-size: 11px;
+    color: var(--wa-meta);
+  }
+
+  .voice-speed {
+    background: rgba(0,0,0,0.06);
+    padding: 1px 6px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  .voice-transcript {
     margin-top: 8px;
     padding-top: 8px;
-    border-top: 1px solid rgba(0,0,0,0.06);
+    border-top: 1px solid rgba(0,0,0,0.08);
+    font-size: 13.5px;
+    color: var(--wa-text);
+    line-height: 1.4;
+    position: relative;
   }
 
-  .qr-btn {
-    background: white;
-    border: 1px solid var(--wa-verified);
-    color: var(--wa-verified);
-    padding: 6px 12px;
-    border-radius: 16px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-family: inherit;
+  .voice-transcript-label {
+    font-size: 10.5px;
+    color: var(--wa-link);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
 
-  .qr-btn:hover { background: var(--wa-verified); color: white; }
+  .voice-transcript-label::before {
+    content: "✨";
+    font-size: 11px;
+  }
 
-  /* Receipt card */
-  .receipt {
-    background: white;
+  /* ===== REPLY BUTTONS (interactive) ===== */
+  .reply-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin: 4px 8px 4px 8px;
+    max-width: 78%;
+    align-self: flex-start;
+    animation: bubbleIn 0.32s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    opacity: 0;
+    animation-fill-mode: forwards;
     border-radius: 8px;
     overflow: hidden;
-    margin-top: 6px;
-    border: 1px solid rgba(0,0,0,0.08);
   }
 
-  .receipt-header {
-    background: linear-gradient(120deg, var(--wa-green-dark), var(--wa-header));
-    color: white;
-    padding: 10px 12px;
-    font-size: 12px;
-    font-weight: 600;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .receipt-body {
-    padding: 10px 12px;
-    font-size: 13px;
-  }
-
-  .receipt-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 4px 0;
-    gap: 12px;
-  }
-
-  .receipt-row:not(:last-child) {
-    border-bottom: 1px dashed rgba(0,0,0,0.08);
-  }
-
-  .receipt-label { color: var(--wa-meta); font-size: 12px; }
-  .receipt-val { font-weight: 600; text-align: right; }
-
-  /* Typing indicator */
-  .typing {
-    align-self: flex-start;
+  .reply-btn {
     background: var(--wa-bubble-in);
-    border-radius: 16px;
-    border-top-left-radius: 0;
-    padding: 10px 14px;
-    margin-left: 8px;
+    border: none;
+    color: var(--wa-link);
+    padding: 11px 14px;
+    font-size: 14.5px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.15s;
+    font-family: inherit;
     box-shadow: 0 1px 0.5px rgba(11, 20, 26, 0.13);
+    border-top: 1px solid rgba(0,0,0,0.08);
+  }
+
+  .reply-btn:first-child { border-top: none; }
+  .reply-btn:hover { background: #f7f7f7; }
+
+  .reply-btn.tapping {
+    background: #d4eaff;
+    transform: scale(0.97);
+    transition: all 0.15s;
+  }
+
+  .reply-buttons.dismissed {
+    animation: dismissBtns 0.3s ease forwards;
+  }
+
+  @keyframes dismissBtns {
+    to { opacity: 0; max-height: 0; margin: 0; transform: translateY(-8px); }
+  }
+
+  /* ===== LOCATION ===== */
+  .location {
+    padding: 4px !important;
+    overflow: hidden;
+    width: 240px;
+  }
+
+  .location-map {
+    width: 100%;
+    height: 130px;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(135deg, #c8e6c9 0%, #aed581 50%, #b3e5fc 100%);
+  }
+
+  .location-map svg {
+    width: 100%; height: 100%; display: block;
+  }
+
+  .location-pin {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -100%);
+    font-size: 28px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+    animation: pinDrop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes pinDrop {
+    0% { transform: translate(-50%, -200%); opacity: 0; }
+    100% { transform: translate(-50%, -100%); opacity: 1; }
+  }
+
+  .location-info { padding: 8px 10px 2px; }
+  .location-name {
+    font-size: 14px; font-weight: 600;
+    color: var(--wa-text); margin-bottom: 2px;
+  }
+  .location-address {
+    font-size: 12.5px; color: var(--wa-meta); line-height: 1.3;
+  }
+
+  /* ===== DOCUMENT ===== */
+  .document {
+    width: 260px;
+    padding: 4px !important;
+  }
+
+  .doc-row {
     display: flex;
-    gap: 4px;
-    animation: bubbleIn 0.3s ease;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: rgba(0,0,0,0.04);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
   }
 
-  .typing span {
-    width: 7px;
-    height: 7px;
-    background: var(--wa-meta);
+  .doc-row:hover { background: rgba(0,0,0,0.08); }
+
+  .doc-icon {
+    width: 38px; height: 46px;
+    background: white;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d32f2f;
+    font-weight: 700;
+    font-size: 9px;
+    flex-shrink: 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    position: relative;
+  }
+
+  .doc-icon::before {
+    content: "";
+    position: absolute;
+    top: 0; right: 0;
+    border-style: solid;
+    border-width: 0 8px 8px 0;
+    border-color: transparent #f5f5f5 transparent transparent;
+  }
+
+  .doc-info { flex: 1; min-width: 0; }
+  .doc-name {
+    font-size: 13.5px; font-weight: 500;
+    color: var(--wa-text);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .doc-size {
+    font-size: 11.5px; color: var(--wa-meta);
+    margin-top: 2px;
+  }
+
+  .doc-download {
+    width: 28px; height: 28px;
     border-radius: 50%;
-    animation: typingBounce 1.4s infinite ease-in-out;
-  }
-
-  .typing span:nth-child(2) { animation-delay: 0.2s; }
-  .typing span:nth-child(3) { animation-delay: 0.4s; }
-
-  @keyframes typingBounce {
-    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
-    30% { transform: translateY(-6px); opacity: 1; }
+    background: var(--wa-meta);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+    font-size: 14px;
   }
 
   /* Input bar */
   .input-bar {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 0; left: 0; right: 0;
     background: #f0f0f0;
     padding: 8px 8px 14px;
-    display: flex;
-    gap: 6px;
-    align-items: center;
+    display: flex; gap: 6px; align-items: center;
   }
 
   .input-field {
@@ -787,27 +849,18 @@
     padding: 9px 14px;
     font-size: 14px;
     color: var(--wa-meta);
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    display: flex; align-items: center; gap: 8px;
     min-height: 38px;
   }
 
-  .input-icon {
-    color: var(--wa-meta);
-    font-size: 18px;
-  }
+  .input-icon { color: var(--wa-meta); font-size: 18px; }
 
   .send-btn {
-    width: 42px;
-    height: 42px;
+    width: 42px; height: 42px;
     border-radius: 50%;
     background: var(--wa-header);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: white; flex-shrink: 0;
   }
 
   .send-btn svg { width: 20px; height: 20px; fill: white; }
@@ -827,12 +880,7 @@
     font-size: 13px;
   }
 
-  .footer a {
-    color: var(--magenta);
-    text-decoration: none;
-    font-weight: 500;
-  }
-
+  .footer a { color: var(--magenta); text-decoration: none; font-weight: 500; }
   .footer a:hover { text-decoration: underline; }
 
   .progress-bar {
@@ -852,7 +900,6 @@
     border-radius: 2px;
   }
 
-  /* Responsive */
   @media (max-width: 1024px) {
     .stage {
       grid-template-columns: 1fr;
@@ -867,13 +914,11 @@
   }
 
   @media (max-width: 480px) {
-    .phone {
-      width: 340px;
-      height: 690px;
-    }
+    .phone { width: 340px; height: 690px; }
     .features { grid-template-columns: 1fr; }
     h1 { font-size: 38px; }
     .top-bar { justify-content: center; }
+    .agent-status { font-size: 11px; padding: 7px 13px 7px 11px; }
   }
 </style>
 </head>
@@ -881,7 +926,6 @@
 
 <div class="stage">
 
-  <!-- Top bar with logo -->
   <div class="top-bar">
     <div class="brand">
       <img src="https://www.henkancx.com/logo-henkancx.png" alt="HenkanCX" />
@@ -894,19 +938,18 @@
     </div>
   </div>
 
-  <!-- Copy side -->
   <div class="copy">
     <span class="eyebrow">CASO DE USO · SOPORTE TÉCNICO</span>
     <h1>Soporte sin <span class="accent">fricción</span>, 24/7.</h1>
     <p class="lede">
-      Henky es el agente conversacional de HenkanCX que diagnostica, consulta datos en tu CRM y crea órdenes de servicio en minutos. NLP + IA generativa orquestados sobre WhatsApp Business API oficial.
+      Henky es el agente conversacional de HenkanCX. Entiende texto, voz e imágenes; consulta tu CRM y ERP; y resuelve en autogestión total sobre WhatsApp Business API oficial.
     </p>
 
     <div class="features">
       <div class="feat">
-        <div class="feat-icon">🧠</div>
-        <div class="feat-title">NLP + Gen AI</div>
-        <div class="feat-desc">Comprende lenguaje natural, no menús rígidos.</div>
+        <div class="feat-icon">🎙️</div>
+        <div class="feat-title">Voz a texto con IA</div>
+        <div class="feat-desc">Transcribe y entiende notas de voz al instante.</div>
       </div>
       <div class="feat">
         <div class="feat-icon">🔍</div>
@@ -936,8 +979,13 @@
     </div>
   </div>
 
-  <!-- Phone -->
   <div class="phone-wrap">
+
+    <div class="agent-status" id="agentStatus">
+      <div class="as-spinner"></div>
+      <span id="agentStatusText">Procesando…</span>
+    </div>
+
     <div class="phone">
       <div class="screen">
         <div class="island"></div>
@@ -971,7 +1019,7 @@
 
         <div class="biz-banner">
           <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-          Cuenta de empresa verificada por WhatsApp · Cifrado de extremo a extremo
+          Cuenta de empresa verificada · Cifrado de extremo a extremo
         </div>
 
         <div class="chat" id="chat">
@@ -997,7 +1045,6 @@
     <div class="progress-fill" id="progress"></div>
   </div>
 
-  <!-- Footer -->
   <div class="footer">
     <div>
       © 2026 HenkanCX · Transformamos la experiencia del cliente desde el día 1.
@@ -1012,81 +1059,117 @@
 </div>
 
 <script>
-  // ============ CONVERSATION SCRIPT ============
-  // Cada paso: { type, content, delay (ms after previous), typingMs (optional) }
+  // ============ HELPERS ============
+  function makeWaveform(barCount = 28, seed = 1) {
+    let html = '';
+    let s = seed;
+    for (let i = 0; i < barCount; i++) {
+      s = (s * 9301 + 49297) % 233280;
+      const r = s / 233280;
+      const h = 20 + r * 75;
+      html += `<div class="bar" style="height:${h}%"></div>`;
+    }
+    return html;
+  }
+
+  function locationMapSVG() {
+    return `
+      <svg viewBox="0 0 240 130" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="240" height="130" fill="#dceadb"/>
+        <rect x="30" y="20" width="60" height="42" fill="#a5d6a7" opacity="0.7"/>
+        <rect x="150" y="70" width="55" height="40" fill="#a5d6a7" opacity="0.6"/>
+        <path d="M 200 0 Q 220 30 240 20 L 240 0 Z" fill="#90caf9" opacity="0.6"/>
+        <line x1="0" y1="65" x2="240" y2="65" stroke="white" stroke-width="6"/>
+        <line x1="0" y1="65" x2="240" y2="65" stroke="#fdd835" stroke-width="1" stroke-dasharray="6 6"/>
+        <line x1="120" y1="0" x2="120" y2="130" stroke="white" stroke-width="5"/>
+        <line x1="60" y1="0" x2="60" y2="130" stroke="white" stroke-width="3"/>
+        <line x1="180" y1="0" x2="180" y2="130" stroke="white" stroke-width="3"/>
+        <line x1="0" y1="100" x2="240" y2="100" stroke="white" stroke-width="3"/>
+        <line x1="0" y1="30" x2="240" y2="30" stroke="white" stroke-width="2"/>
+        <rect x="125" y="35" width="15" height="22" fill="#bdbdbd" opacity="0.7"/>
+        <rect x="142" y="38" width="12" height="19" fill="#9e9e9e" opacity="0.7"/>
+        <rect x="100" y="75" width="18" height="20" fill="#bdbdbd" opacity="0.7"/>
+        <rect x="80" y="105" width="20" height="20" fill="#9e9e9e" opacity="0.6"/>
+      </svg>
+    `;
+  }
+
+  // ============ CONVERSATION ============
   const conversation = [
-    { type: 'enc', content: 'Los mensajes y llamadas están cifrados de extremo a extremo. Solo las personas en este chat pueden leerlos.', delay: 400 },
+    { type: 'enc', delay: 400 },
 
-    { type: 'out', content: 'Hola 👋', meta: '9:42 AM', delay: 800 },
-    { type: 'out', content: 'Mi refrigeradora dejó de enfriar desde anoche 😩', meta: '9:42 AM', delay: 700 },
+    { type: 'out', text: 'Hola 👋', meta: '9:42 AM', delay: 800 },
 
-    { type: 'typing', delay: 600, duration: 1400 },
-    { type: 'in', content: '¡Hola, María! Soy <strong>Henky</strong>, tu asistente virtual de HenkanCX 🤖<br><br>Lamento escuchar lo de tu refri. Voy a ayudarte a resolverlo lo más rápido posible — sin que tengas que esperar en línea.', meta: '9:42 AM', delay: 200 },
+    { type: 'agent-status', text: '🤖 NLP detectando intención…', delay: 600, duration: 900 },
 
-    { type: 'typing', delay: 600, duration: 1100 },
-    { type: 'in', content: 'Para empezar, ¿me confirmas tu cédula o número de contrato?', meta: '9:42 AM', delay: 200 },
+    { type: 'in', text: '¡Hola, María! 👋 Soy <strong>Henky</strong>, tu asistente virtual de HenkanCX 🤖✨<br><br>Estoy disponible <strong>24/7</strong>. ¿En qué te puedo ayudar?', meta: '9:42 AM', typingMs: 1200, delay: 200 },
 
-    { type: 'out', content: '8-756-2341', meta: '9:43 AM', delay: 1200 },
+    { type: 'voice', sender: 'out', avatar: 'M',
+      avatarColor: 'linear-gradient(135deg, #ff9a9e, #fad0c4)',
+      duration: '0:14', meta: '9:42 AM', seed: 7,
+      transcript: 'Hola Henky, mira mi refrigeradora ya no está enfriando desde anoche y se me está dañando toda la comida que tengo, ayúdame por favor que no sé qué hacer.',
+      delay: 1500 },
 
-    { type: 'typing', delay: 600, duration: 1800 },
-    { type: 'system', icon: '🔍', content: 'Henky consultó <strong>CRM + ERP</strong> · 1.2s' },
-    { type: 'in', content: '¡Te encontré, María! ✅<br><br>👤 <strong>María González Pérez</strong><br>📍 Vía España, Edif. Torre Mar #1402<br>📦 Refrigeradora Samsung RT35K (S/N: RF8829)<br>🛡️ Garantía vigente hasta <strong>sept. 2026</strong>', meta: '9:43 AM', delay: 200 },
+    { type: 'agent-status', text: '🎙️ Transcribiendo audio (Speech-to-Text)…', delay: 500, duration: 1800 },
+    { type: 'agent-status', text: '🧠 Analizando intención con LLM…', delay: 200, duration: 1300 },
 
-    { type: 'typing', delay: 700, duration: 1200 },
-    { type: 'in', content: 'Antes de mandar un técnico, dame 30 segundos para hacerte un mini-diagnóstico. Muchas veces resolvemos sin necesidad de visita 😉<br><br>¿Empezamos?', meta: '9:43 AM', delay: 200 },
+    { type: 'in', text: 'Entiendo, María. Lamento mucho lo que está pasando con tu refri 😔<br><br>Voy a ayudarte a resolverlo lo más rápido posible — <strong>sin filas, sin esperas</strong>.<br><br>Para empezar, ¿me confirmas tu <strong>cédula</strong> o <strong>número de contrato</strong>?', meta: '9:42 AM', typingMs: 1400, delay: 200 },
 
-    { type: 'out', content: 'Dale, vamos', meta: '9:43 AM', delay: 1300 },
+    { type: 'out', text: '8-756-2341', meta: '9:43 AM', delay: 1500 },
 
-    { type: 'typing', delay: 600, duration: 1100 },
-    { type: 'in', content: '<strong>Pregunta 1 de 3:</strong> ¿La luz interior se enciende cuando abres la puerta? 💡', meta: '9:43 AM', delay: 200 },
+    { type: 'agent-status', text: '🔍 Consultando CRM + ERP…', delay: 500, duration: 1900 },
 
-    { type: 'out', content: 'Sí, la luz prende normal', meta: '9:44 AM', delay: 1500 },
+    { type: 'in', text: '✅ ¡Te encontré!<br><br>👤 <strong>María González Pérez</strong><br>📍 Vía España, Edif. Torre Mar #1402<br>📦 Refrigeradora Samsung RT35K<br>🛡️ Garantía vigente hasta <strong>sept. 2026</strong>', meta: '9:43 AM', typingMs: 1100, delay: 200 },
 
-    { type: 'typing', delay: 500, duration: 1000 },
-    { type: 'in', content: '✅ Bien — energía eléctrica confirmada.<br><br><strong>Pregunta 2 de 3:</strong> ¿Escuchas el motor (compresor) zumbando, o está totalmente en silencio?', meta: '9:44 AM', delay: 200 },
+    { type: 'in', text: 'Antes de mandar un técnico, déjame hacerte un mini-diagnóstico de 30 segundos. Muchas veces lo resolvemos sin necesidad de visita 😉', meta: '9:43 AM', typingMs: 900, delay: 600 },
 
-    { type: 'out', content: 'Está en silencio total. Antes hacía un zumbido bajito y ya no.', meta: '9:44 AM', delay: 1700 },
+    { type: 'in-with-buttons', text: '¿Comenzamos?', meta: '9:43 AM', typingMs: 700, delay: 500,
+      buttons: ['👍 Sí, vamos', '🙅 Mejor no'], pickIndex: 0, pickMeta: '9:43 AM' },
 
-    { type: 'typing', delay: 500, duration: 1300 },
-    { type: 'in', content: 'Entendido. Una última 🙌<br><br><strong>Pregunta 3 de 3:</strong> ¿El congelador (la parte de arriba) tiene escarcha/hielo o también está sin enfriar?', meta: '9:44 AM', delay: 200 },
+    { type: 'in-with-buttons', text: '<strong>Pregunta 1 de 3:</strong> ¿La luz interior se enciende cuando abres la puerta? 💡', meta: '9:43 AM', typingMs: 1000, delay: 700,
+      buttons: ['💡 Sí, prende', '⚫ No prende'], pickIndex: 0, pickMeta: '9:44 AM' },
 
-    { type: 'out', content: 'Tampoco enfría. La carne se descongeló 😢', meta: '9:45 AM', delay: 1500 },
+    { type: 'in', text: '✅ Energía confirmada.<br><br><strong>Pregunta 2 de 3:</strong> Cuéntame qué escuchas cuando te paras frente a la refri. ¿Hay zumbido, motor, algún ruido… o está totalmente en silencio?', meta: '9:44 AM', typingMs: 1100, delay: 600 },
 
-    { type: 'typing', delay: 600, duration: 2000 },
-    { type: 'system', icon: '🧠', content: 'IA generativa analizando síntomas + historial...' },
-    { type: 'in', content: '🚨 <strong>Diagnóstico preliminar</strong><br><br>Síntomas compatibles con falla del <strong>compresor</strong> o el <strong>relevador de arranque</strong>. Esto requiere visita técnica con repuesto.<br><br>La buena noticia: tu garantía cubre 100% el servicio y las piezas ✨', meta: '9:45 AM', delay: 200 },
+    { type: 'voice', sender: 'out', avatar: 'M',
+      avatarColor: 'linear-gradient(135deg, #ff9a9e, #fad0c4)',
+      duration: '0:18', meta: '9:44 AM', seed: 23,
+      transcript: 'Mira fíjate que antes hacía un zumbido bajito como un motor prendido, pero ahora ya no escucho absolutamente nada, está en silencio total. Y hace como dos días empezó a hacer un click raro y desde anoche ya no enfría nada de nada.',
+      delay: 1700 },
 
-    { type: 'typing', delay: 700, duration: 1100 },
-    { type: 'in', content: 'Voy a generar tu orden de servicio. ¿Confirmamos la dirección registrada?<br><br>📍 Vía España, Edif. Torre Mar, Apto 1402', meta: '9:45 AM', delay: 200 },
+    { type: 'agent-status', text: '🎙️ Transcribiendo + extrayendo síntomas…', delay: 500, duration: 2000 },
 
-    { type: 'out', content: 'Sí, esa misma', meta: '9:45 AM', delay: 1200 },
+    { type: 'in', text: 'Anotado: <em>silencio total + click intermitente hace 2 días</em>. Esa información es clave 🔑', meta: '9:44 AM', typingMs: 1300, delay: 200 },
 
-    { type: 'typing', delay: 500, duration: 900 },
-    { type: 'in', content: '¿Qué horario te queda mejor mañana viernes?', meta: '9:45 AM', delay: 200, quickReplies: ['🌅 8AM – 12PM', '☀️ 12PM – 4PM', '🌆 4PM – 7PM'] },
+    { type: 'in-with-buttons', text: '<strong>Pregunta 3 de 3:</strong> ¿El congelador (parte de arriba) tiene escarcha o también está sin enfriar?', meta: '9:44 AM', typingMs: 1000, delay: 600,
+      buttons: ['❄️ Tiene escarcha', '💧 Sin enfriar'], pickIndex: 1, pickMeta: '9:45 AM' },
 
-    { type: 'out', content: '🌅 8AM – 12PM', meta: '9:46 AM', delay: 1800 },
+    { type: 'agent-status', text: '🤖 Generando diagnóstico con IA generativa…', delay: 500, duration: 2100 },
 
-    { type: 'typing', delay: 700, duration: 2200 },
-    { type: 'system', icon: '⚙️', content: 'Asignando técnico con repuestos + creando orden en ERP...' },
-    { type: 'in', content: '✨ <strong>¡Listo, María! Tu orden está confirmada:</strong>', meta: '9:46 AM', delay: 200, receipt: {
-      header: ['📋 Orden de Servicio', '#SR-2026-04872'],
-      rows: [
-        ['Técnico asignado', 'Carlos Méndez ⭐ 4.9'],
-        ['Fecha', 'Vie. 09 may, 2026'],
-        ['Ventana', '8:00 AM – 12:00 PM'],
-        ['Repuestos', 'Relevador + compresor'],
-        ['Tiempo estimado', '45 – 60 min'],
-        ['Costo cliente', '$0.00 (garantía) ✓']
-      ]
-    } },
+    { type: 'in', text: '🚨 <strong>Diagnóstico preliminar</strong><br><br>Síntomas compatibles con falla del <strong>compresor</strong> o el <strong>relevador de arranque</strong>. El click que escuchabas hace dos días suele ser el primer síntoma del relevador.<br><br>La buena noticia: <strong>tu garantía cubre 100%</strong> servicio + piezas ✨', meta: '9:45 AM', typingMs: 1500, delay: 200 },
 
-    { type: 'typing', delay: 700, duration: 1100 },
-    { type: 'in', content: 'Recibirás un SMS 30 minutos antes de que Carlos llegue 🚐<br><br>Y si quieres, puedes <strong>seguir su ubicación en vivo</strong> el día de la visita.<br><br>¿Algo más en lo que te pueda ayudar?', meta: '9:46 AM', delay: 200 },
+    { type: 'in', text: 'Voy a generar tu orden de servicio. ¿Confirmamos la dirección registrada?', meta: '9:45 AM', typingMs: 800, delay: 700 },
 
-    { type: 'out', content: 'Nada más, ¡mil gracias Henky! 🙏', meta: '9:47 AM', delay: 1600 },
+    { type: 'location', sender: 'in', name: 'Edif. Torre Mar — Apto 1402', address: 'Vía España, Ciudad de Panamá', meta: '9:45 AM', delay: 600 },
 
-    { type: 'typing', delay: 500, duration: 1000 },
-    { type: 'in', content: '¡Con muchísimo gusto, María! 💜<br><br>Si necesitas algo más, escríbeme. Estoy disponible 24/7.<br><br>Que tengas un excelente día ☀️', meta: '9:47 AM', delay: 200 }
+    { type: 'in-with-buttons', text: '¿Es esta dirección?', meta: '9:45 AM', typingMs: 600, delay: 400,
+      buttons: ['✅ Sí, esa', '✏️ Cambiar'], pickIndex: 0, pickMeta: '9:45 AM' },
+
+    { type: 'in-with-buttons', text: 'Perfecto. ¿Qué horario te queda mejor mañana viernes?', meta: '9:45 AM', typingMs: 800, delay: 600,
+      buttons: ['🌅 8AM – 12PM', '☀️ 12PM – 4PM', '🌆 4PM – 7PM'], pickIndex: 0, pickMeta: '9:46 AM' },
+
+    { type: 'agent-status', text: '⚙️ Creando orden en ERP + asignando técnico…', delay: 500, duration: 2300 },
+
+    { type: 'in', text: '✨ <strong>¡Orden confirmada, María!</strong><br><br>📋 <strong>Orden #SR-2026-04872</strong><br>👨‍🔧 <strong>Técnico:</strong> Carlos Méndez ⭐ 4.9<br>📅 <strong>Fecha:</strong> Vie. 09 may, 2026<br>🕗 <strong>Ventana:</strong> 8:00 AM – 12:00 PM<br>🔧 <strong>Repuestos:</strong> Relevador + compresor<br>⏱️ <strong>Tiempo estimado:</strong> 45–60 min<br>💰 <strong>Costo:</strong> $0.00 <em>(cubierto por garantía)</em> ✓', meta: '9:46 AM', typingMs: 1500, delay: 200 },
+
+    { type: 'document', sender: 'in', name: 'Orden_SR-2026-04872.pdf', size: '1 página · 84 KB', meta: '9:46 AM', delay: 700 },
+
+    { type: 'in', text: '📲 Te llegará un SMS <strong>30 minutos antes</strong> de que Carlos llegue. También podrás seguir su ubicación en vivo el día de la visita.', meta: '9:46 AM', typingMs: 1100, delay: 800 },
+
+    { type: 'in-with-buttons', text: '¿Algo más en lo que te pueda ayudar?', meta: '9:46 AM', typingMs: 700, delay: 500,
+      buttons: ['✅ Eso es todo', '📞 Hablar con humano'], pickIndex: 0, pickMeta: '9:47 AM' },
+
+    { type: 'in', text: '¡Con muchísimo gusto, María! 💜<br><br>Si necesitas algo, escríbeme. Estoy disponible <strong>24/7</strong>.<br><br>Que tengas un excelente día ☀️', meta: '9:47 AM', typingMs: 1100, delay: 200 }
   ];
 
   // ============ PLAYER ============
@@ -1096,9 +1179,11 @@
   const speedLabel = document.getElementById('speedLabel');
   const waStatus = document.getElementById('waStatus');
   const progress = document.getElementById('progress');
+  const agentStatus = document.getElementById('agentStatus');
+  const agentStatusText = document.getElementById('agentStatusText');
 
   let speed = 1;
-  let speeds = [1, 1.5, 2, 0.5];
+  const speeds = [1, 1.5, 2, 0.5];
   let speedIdx = 0;
   let playing = false;
   let cancelToken = 0;
@@ -1109,71 +1194,110 @@
     speedLabel.textContent = speed + '×';
   });
 
-  function wait(ms) {
-    return new Promise(r => setTimeout(r, ms / speed));
+  function wait(ms) { return new Promise(r => setTimeout(r, ms / speed)); }
+  function scrollChat() { chat.scrollTop = chat.scrollHeight; }
+  function clearChat() { chat.innerHTML = '<div class="date-divider">HOY</div>'; }
+
+  function showAgentStatus(text) {
+    agentStatusText.textContent = text;
+    agentStatus.classList.add('on');
+  }
+  function hideAgentStatus() { agentStatus.classList.remove('on'); }
+
+  function metaHtml(meta, isOut) {
+    const checks = isOut ? '<span class="check">✓✓</span>' : '';
+    return `<span class="meta">${meta}${checks}</span>`;
   }
 
-  function scrollChat() {
-    chat.scrollTop = chat.scrollHeight;
-  }
-
-  function clearChat() {
-    chat.innerHTML = '<div class="date-divider">HOY</div>';
-  }
-
-  function appendBubble(step) {
+  function appendText(step) {
+    const isOut = step.type === 'out' || step.sender === 'out';
     const b = document.createElement('div');
-
-    if (step.type === 'enc') {
-      b.className = 'enc-notice';
-      b.innerHTML = '🔒 ' + step.content;
-    } else if (step.type === 'system') {
-      b.className = 'bubble system';
-      b.innerHTML = `<span class="sys-icon">${step.icon}</span><span>${step.content}</span>`;
-    } else {
-      b.className = 'bubble ' + step.type;
-      let html = step.content;
-      if (step.meta) {
-        const checks = step.type === 'out' ? '<span class="check">✓✓</span>' : '';
-        html += `<span class="meta">${step.meta}${checks}</span>`;
-      }
-      if (step.quickReplies) {
-        html += '<div class="quick-replies">' +
-          step.quickReplies.map(q => `<button class="qr-btn">${q}</button>`).join('') +
-          '</div>';
-      }
-      if (step.receipt) {
-        html += `
-          <div class="receipt">
-            <div class="receipt-header">
-              <span>${step.receipt.header[0]}</span>
-              <span>${step.receipt.header[1]}</span>
-            </div>
-            <div class="receipt-body">
-              ${step.receipt.rows.map(r => `
-                <div class="receipt-row">
-                  <span class="receipt-label">${r[0]}</span>
-                  <span class="receipt-val">${r[1]}</span>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        `;
-      }
-      b.innerHTML = html;
-    }
+    b.className = 'bubble ' + (isOut ? 'out' : 'in');
+    b.innerHTML = step.text + (step.meta ? metaHtml(step.meta, isOut) : '');
     chat.appendChild(b);
     scrollChat();
     return b;
   }
 
-  function appendTyping() {
-    const t = document.createElement('div');
-    t.className = 'typing';
-    t.innerHTML = '<span></span><span></span><span></span>';
-    chat.appendChild(t);
+  function appendVoice(step) {
+    const isOut = step.sender === 'out';
+    const b = document.createElement('div');
+    b.className = 'bubble voice ' + (isOut ? 'out' : 'in');
+    const avatarStyle = step.avatarColor ? `style="background:${step.avatarColor}"` : '';
+    b.innerHTML = `
+      <div class="voice-row">
+        <div class="voice-avatar" ${avatarStyle}>${step.avatar || 'U'}</div>
+        <div class="voice-play">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <div class="voice-waveform">${makeWaveform(28, step.seed || 1)}</div>
+        <div class="voice-info">
+          <div class="voice-speed">1×</div>
+          <div>${step.duration}</div>
+        </div>
+      </div>
+      <div class="voice-transcript">
+        <div class="voice-transcript-label">Transcripción IA</div>
+        ${step.transcript}
+      </div>
+      ${step.meta ? metaHtml(step.meta, isOut) : ''}
+    `;
+    chat.appendChild(b);
     scrollChat();
-    return t;
+    setTimeout(() => {
+      b.classList.add('playing', 'played');
+      setTimeout(() => b.classList.remove('playing'), 1800);
+    }, 400);
+    return b;
+  }
+
+  function appendLocation(step) {
+    const isOut = step.sender === 'out';
+    const b = document.createElement('div');
+    b.className = 'bubble location ' + (isOut ? 'out' : 'in');
+    b.innerHTML = `
+      <div class="location-map">
+        ${locationMapSVG()}
+        <div class="location-pin">📍</div>
+      </div>
+      <div class="location-info">
+        <div class="location-name">${step.name}</div>
+        <div class="location-address">${step.address}</div>
+        ${step.meta ? metaHtml(step.meta, isOut) : ''}
+      </div>
+    `;
+    chat.appendChild(b);
+    scrollChat();
+    return b;
+  }
+
+  function appendDocument(step) {
+    const isOut = step.sender === 'out';
+    const b = document.createElement('div');
+    b.className = 'bubble document ' + (isOut ? 'out' : 'in');
+    b.innerHTML = `
+      <div class="doc-row">
+        <div class="doc-icon">PDF</div>
+        <div class="doc-info">
+          <div class="doc-name">${step.name}</div>
+          <div class="doc-size">${step.size}</div>
+        </div>
+        <div class="doc-download">⬇</div>
+      </div>
+      ${step.meta ? `<div style="padding:0 8px 2px;">${metaHtml(step.meta, isOut)}</div>` : ''}
+    `;
+    chat.appendChild(b);
+    scrollChat();
+    return b;
+  }
+
+  function appendReplyButtons(buttons) {
+    const wrap = document.createElement('div');
+    wrap.className = 'reply-buttons';
+    wrap.innerHTML = buttons.map(b => `<button class="reply-btn">${b}</button>`).join('');
+    chat.appendChild(wrap);
+    scrollChat();
+    return wrap;
   }
 
   async function play() {
@@ -1183,31 +1307,89 @@
     clearChat();
     progress.style.width = '0%';
     waStatus.textContent = 'en línea';
+    hideAgentStatus();
 
     for (let i = 0; i < conversation.length; i++) {
       if (myToken !== cancelToken) return;
       const step = conversation[i];
-      await wait(step.delay || 500);
+      await wait(step.delay || 400);
       if (myToken !== cancelToken) return;
 
-      if (step.type === 'typing') {
-        waStatus.textContent = 'escribiendo…';
-        const t = appendTyping();
-        await wait(step.duration || 1200);
-        if (myToken !== cancelToken) return;
-        t.remove();
-        waStatus.textContent = 'en línea';
-      } else {
-        appendBubble(step);
+      if (step.type === 'enc') {
+        const e = document.createElement('div');
+        e.className = 'enc-notice';
+        e.innerHTML = '🔒 Los mensajes están cifrados de extremo a extremo. Solo las personas en este chat pueden leerlos.';
+        chat.appendChild(e);
+        scrollChat();
       }
+      else if (step.type === 'agent-status') {
+        showAgentStatus(step.text);
+        await wait(step.duration || 1500);
+        hideAgentStatus();
+        await wait(200);
+      }
+      else if (step.type === 'out') {
+        appendText(step);
+      }
+      else if (step.type === 'in') {
+        if (step.typingMs) {
+          waStatus.textContent = 'escribiendo…';
+          await wait(step.typingMs);
+          if (myToken !== cancelToken) return;
+          waStatus.textContent = 'en línea';
+        }
+        appendText(step);
+      }
+      else if (step.type === 'in-with-buttons') {
+        if (step.typingMs) {
+          waStatus.textContent = 'escribiendo…';
+          await wait(step.typingMs);
+          if (myToken !== cancelToken) return;
+          waStatus.textContent = 'en línea';
+        }
+        appendText({ ...step, type: 'in' });
+        await wait(250);
+        const btnWrap = appendReplyButtons(step.buttons);
+
+        await wait(1400);
+        if (myToken !== cancelToken) return;
+        const allBtns = btnWrap.querySelectorAll('.reply-btn');
+        const picked = allBtns[step.pickIndex];
+        picked.classList.add('tapping');
+        await wait(220);
+        btnWrap.classList.add('dismissed');
+        await wait(280);
+        if (myToken !== cancelToken) return;
+        btnWrap.remove();
+
+        appendText({ type: 'out', text: step.buttons[step.pickIndex], meta: step.pickMeta });
+      }
+      else if (step.type === 'voice') {
+        appendVoice(step);
+      }
+      else if (step.type === 'location') {
+        appendLocation(step);
+      }
+      else if (step.type === 'document') {
+        appendDocument(step);
+      }
+
       progress.style.width = (((i + 1) / conversation.length) * 100) + '%';
     }
     playing = false;
   }
 
-  replayBtn.addEventListener('click', play);
+  replayBtn.addEventListener('click', () => {
+    if (playing) {
+      cancelToken++;
+      playing = false;
+      hideAgentStatus();
+      setTimeout(play, 100);
+    } else {
+      play();
+    }
+  });
 
-  // Auto-start
   window.addEventListener('load', () => {
     setTimeout(play, 500);
   });
