@@ -959,9 +959,38 @@
     .top-bar { justify-content: center; }
     .agent-status { font-size: 11px; padding: 7px 13px 7px 11px; }
   }
+
+  /* ====================================================================
+     EMBED MODE — activated via ?embed=1
+     Hides everything except the phone + chat. Used to embed this demo
+     inside an iframe in the demo portal modal. Background goes transparent
+     so the parent modal's surface shows through.
+     ==================================================================== */
+  html.embed,
+  html.embed body { background: transparent !important; }
+  html.embed body::before,
+  html.embed body::after { display: none !important; }
+  html.embed .top-bar,
+  html.embed .copy { display: none !important; }
+  html.embed .stage {
+    grid-template-columns: 1fr;
+    padding: 0;
+    gap: 0;
+    place-items: center;
+    min-height: 100vh;
+    max-width: none;
+  }
+  html.embed .phone-wrap { order: 0; }
 </style>
 </head>
 <body>
+
+<script>
+  // Activate embed mode early, before render, to avoid FOUC.
+  if (new URLSearchParams(location.search).has('embed')) {
+    document.documentElement.classList.add('embed');
+  }
+</script>
 
 <div class="stage">
 
