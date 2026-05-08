@@ -6,6 +6,24 @@
 <title>HenkanCX Agent · Demo WhatsApp Business</title>
 <meta name="description" content="Demo en vivo del agente conversacional de HenkanCX para WhatsApp Business. NLP, transcripción de voz con IA, autogestión y creación de órdenes de servicio sin fricción.">
 
+<!-- Favicon -->
+<link rel="icon" type="image/png" href="logo-henkan.png">
+<link rel="apple-touch-icon" href="logo-henkan.png">
+<meta name="theme-color" content="#0D1B2A">
+
+<!-- Open Graph / LinkedIn -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://henky-demo.henkancx.com/">
+<meta property="og:title" content="HenkanCX Agent · Demo WhatsApp Business">
+<meta property="og:description" content="Soporte sin fricción 24/7. Agente conversacional con IA generativa, transcripción de voz, consulta de datos en CRM/ERP y autogestión total sobre WhatsApp Business API oficial.">
+<meta property="og:image" content="https://henky-demo.henkancx.com/logo-henkan.png">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HenkanCX Agent · Demo WhatsApp Business">
+<meta name="twitter:description" content="Soporte sin fricción 24/7 con IA generativa sobre WhatsApp Business.">
+<meta name="twitter:image" content="https://henky-demo.henkancx.com/logo-henkan.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -96,7 +114,26 @@
   }
 
   .brand { display: flex; align-items: center; gap: 14px; }
-  .brand img { height: 38px; width: auto; filter: brightness(0) invert(1); }
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .brand-logo img {
+    height: 38px;
+    width: 38px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 8px rgba(203, 108, 230, 0.3));
+  }
+  .brand-wordmark {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
   .brand-divider { width: 1px; height: 28px; background: rgba(255,255,255,0.2); }
   .brand-tag {
     font-family: 'Bricolage Grotesque', sans-serif;
@@ -392,16 +429,18 @@
   .wa-avatar {
     width: 40px; height: 40px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--magenta), var(--purple));
+    background: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Bricolage Grotesque', sans-serif;
-    font-weight: 800;
-    font-size: 17px;
-    color: white;
     flex-shrink: 0;
     box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
+    overflow: hidden;
+  }
+  .wa-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .wa-info { flex: 1; min-width: 0; }
@@ -928,7 +967,10 @@
 
   <div class="top-bar">
     <div class="brand">
-      <img src="https://www.henkancx.com/logo-henkancx.png" alt="HenkanCX" />
+      <div class="brand-logo">
+        <img src="logo-henkan.png" alt="HenkanCX logo" />
+        <span class="brand-wordmark">henkancx</span>
+      </div>
       <div class="brand-divider"></div>
       <span class="brand-tag">Conversational AI for WhatsApp Business</span>
     </div>
@@ -1000,7 +1042,7 @@
 
         <div class="wa-header">
           <span class="wa-back">‹</span>
-          <div class="wa-avatar">H</div>
+          <div class="wa-avatar"><img src="logo-henkan.png" alt="HenkanCX" /></div>
           <div class="wa-info">
             <div class="wa-name">
               HenkanCX Agent
